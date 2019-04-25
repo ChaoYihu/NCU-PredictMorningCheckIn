@@ -26,8 +26,8 @@ def jsl():
     jslist = []
     js = soup.find('div', attrs={'class': 'row js'}).findChildren('div')[1:]
     for i in range(0, len(time)):
-        timelist.append(str(time[i])[30:-6].strip())
-        jslist.append(str(js[i])[5:-6].strip().replace('无降水','0').replace('mm',''))
+        timelist.append(str(time[i])[30:-6].strip().split('日')[-1])
+        jslist.append(str(js[i])[5:-6].strip().replace('无降水', '0').replace('mm', ''))
     jsl_dict = {}
     for i in range(0, len(js)):
         jsl_dict[timelist[i]] = jslist[i]
@@ -61,22 +61,24 @@ def history_weather(date):
 
 def get_date():  # 本函数用于获取需要判断早点到的日期.具体方法为,如果为当天的凌晨5点前,返回当天日期,如果是当天凌晨5点后,返回下一天日期.
     time_variable = time.strftime("%Y%m%d %H:%M:%S", time.localtime())
-    if int(time_variable[9:11])>=5:
-        return str(int(time_variable[:8])+1)
+    if int(time_variable[9:11]) >= 5:
+        return str(int(time_variable[:8]) + 1)
     else:
         return time_variable[:8]
+
 
 def weight_5years_weather(date):
     weight = 0
     weather_list = []
-    for i in range(1,6):
-        weather_list.append(history_weather(str(int(date[:4])-i)+date[4:])[0])
+    for i in range(1, 6):
+        weather_list.append(history_weather(str(int(date[:4]) - i) + date[4:])[0])
     for i in weather_list:
         if '雨' in i or "雪" in i:
             weight += 0
         else:
             weight += 4
     return weight
+
 
 def weight_jsl(jsl_dict):
     weight = 0
@@ -102,8 +104,8 @@ if __name__ == '__main__':
         jsl_weight = weight_jsl(jsl())
         history_weight = weight_5years_weather(day)
         weight = jsl_weight + history_weight
-        print('根据预测,'+day+"需要早点到的概率为"+str(weight)+'%')
-        print("其中,降水量权重占比"+str(jsl_weight)+'%,同期历史天气参考占比'+str(history_weight)+'%.')
+        print('根据预测,' + day + "需要早点到的概率为" + str(weight) + '%')
+        print("其中,降水量权重占比" + str(jsl_weight) + '%,同期历史天气参考占比' + str(history_weight) + '%.')
         if day_type == 0:
             print('该日为普通工作日!')
         if day_type == 2:
