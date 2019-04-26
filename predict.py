@@ -104,14 +104,14 @@ if __name__ == '__main__':
         jsl_weight = weight_jsl(jsl())
         history_weight = weight_5years_weather(day)
         weight = jsl_weight + history_weight
-        print('根据预测,' + day + "需要早点到的概率为" + str(weight) + '%')
+        print('根据预测,' + day[:4] + '年' + day[4:6] + '月' + day[6:8] + '日' + "需要早点到的概率为" + str(weight) + '%')
         print("其中,降水量权重占比" + str(jsl_weight) + '%,同期历史天气参考占比' + str(history_weight) + '%.')
         if day_type == 0:
             print('该日为普通工作日!')
         if day_type == 2:
             print('该日为节假日调休补课!')
     elif day_type == 1 or day_type == 3:
-        print('根据预测,' + day + "需要早点到的概率为0%")
+        print('根据预测,' + day[:4] + '年' + day[4:6] + '月' + day[6:8] + '日' + "需要早点到的概率为0%")
         if day_type == 1:
             print('该日为法定节假日!')
         if day_type == 3:
