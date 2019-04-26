@@ -59,9 +59,9 @@ def history_weather(date):
         return '未找到日期为' + date + '的历史天气数据'
 
 
-def get_date():  # 本函数用于获取需要判断早点到的日期.具体方法为,如果为当天的凌晨5点前,返回当天日期,如果是当天凌晨5点后,返回下一天日期.
+def get_date():  # 本函数用于获取需要判断早点到的日期.具体方法为,如果为当天的8点前,返回当天日期,如果是当天8点后,返回下一天日期.
     time_variable = time.strftime("%Y%m%d %H:%M:%S", time.localtime())
-    if int(time_variable[9:11]) >= 5:
+    if int(time_variable[9:11]) >= 8:
         return str(int(time_variable[:8]) + 1)
     else:
         return time_variable[:8]
