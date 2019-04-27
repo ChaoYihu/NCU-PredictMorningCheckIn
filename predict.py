@@ -27,7 +27,7 @@ def jsl():
     js = soup.find('div', attrs={'class': 'row js'}).findChildren('div')[1:]
     for i in range(0, len(time)):
         timelist.append(str(time[i])[30:-6].strip().split('日')[-1])
-        jslist.append(str(js[i])[5:-6].strip().replace('无降水', '0').replace('mm', ''))
+        jslist.append(str(js[i])[5:-6].replace('无降水', '0').replace('毫米', '').strip())
     jsl_dict = {}
     for i in range(0, len(js)):
         jsl_dict[timelist[i]] = jslist[i]
@@ -38,10 +38,13 @@ def date_judge(date):  # date字符串类型
     # date为8位,示例:19990513,此API仅支持2017年之后的日期
     # 正常工作日对应结果为 0, 法定节假日对应结果为 1, 节假日调休补班对应的结果为 2，休息日对应结果为 3
     while True:
-        response = requests.get(url='http://api.goseek.cn/Tools/holiday?date=' + date)
-        result = dict(response.json())
-        if 'data' in result.keys():
-            return result['data']
+        try:
+            response = requests.get(url='http://api.goseek.cn/Tools/holiday?date=' + date)
+            result = dict(response.json())
+            if 'data' in result.keys():
+                return result['data']
+        except:
+            pass
 
 
 def history_weather(date):
@@ -82,8 +85,8 @@ def weight_5years_weather(date):
 
 def weight_jsl(jsl_dict):
     weight = 0
-    five = int(jsl_dict['05:00'])
-    eight = int(jsl_dict['08:00'])
+    five = float(jsl_dict['05:00'])
+    eight = float(jsl_dict['08:00'])
     five_to_eight = five + eight
     if five_to_eight == 0:
         weight += 80
