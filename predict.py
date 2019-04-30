@@ -62,10 +62,39 @@ def history_weather(date):
         return '未找到日期为' + date + '的历史天气数据'
 
 
+def get_next_day(date):
+    months = {
+        '01': '31',
+        '02': '28',
+        '03': '31',
+        '04': '30',
+        '05': '31',
+        '06': '30',
+        '07': '31',
+        '08': '31',
+        '09': '30',
+        '10': '31',
+        '11': '30',
+        '12': '31'
+    }
+    if int(date[:4]) % 4 == 0 and int(date[:4]) % 100 != 0 or int(date[:4]) % 400 == 0:
+        months['02'] = '29'
+    if months[date[4:6]] == date[6:8]:
+        if date[4:6] == '12':
+            return str(int(date[:4]) + 1) + '0101'
+        else:
+            if date[4] != '0':
+                return date[:4] + str(int(date[4:6]) + 1) + '01'
+            return date[:4] + '0' + str(int(date[4:6]) + 1) + '01'
+    else:
+        return date[:6] + str(int(date[6:8]) + 1)
+
+
+# 存在bug,在月底不能做到跳转到下一月.后期修复.
 def get_date():  # 本函数用于获取需要判断早点到的日期.具体方法为,如果为当天的8点前,返回当天日期,如果是当天8点后,返回下一天日期.
     time_variable = time.strftime("%Y%m%d %H:%M:%S", time.localtime())
     if int(time_variable[9:11]) >= 8:
-        return str(int(time_variable[:8]) + 1)
+        return get_next_day(time_variable[:8])
     else:
         return time_variable[:8]
 
@@ -101,6 +130,7 @@ def weight_jsl(jsl_dict):
 
 
 if __name__ == '__main__':
+    start = time.time()
     day = get_date()
     day_type = date_judge(day)
     if day_type == 0 or day_type == 2:
@@ -119,3 +149,5 @@ if __name__ == '__main__':
             print('该日为法定节假日!')
         if day_type == 3:
             print('该日为休息日!')
+    print('本次获取数据一共消耗时间' + str(round(time.time() - start, 2)) + 's')
+    input('按下回车键继续...')
