@@ -83,7 +83,7 @@ def get_next_day(date):
         if date[4:6] == '12':
             return str(int(date[:4]) + 1) + '0101'
         else:
-            if date[4] != '0':
+            if len(str(int(date[4:6])+1)) != 1:
                 return date[:4] + str(int(date[4:6]) + 1) + '01'
             return date[:4] + '0' + str(int(date[4:6]) + 1) + '01'
     else:
