@@ -87,7 +87,10 @@ def get_next_day(date):
                 return date[:4] + str(int(date[4:6]) + 1) + '01'
             return date[:4] + '0' + str(int(date[4:6]) + 1) + '01'
     else:
-        return date[:6] + str(int(date[6:8]) + 1)
+        if len(str(int(date[6:8]) + 1)) == 1:
+            return date[:6] + '0' + str(int(date[6:8]) + 1)
+        else:
+            return date[:6] + str(int(date[6:8]) + 1)
 
 
 # 存在bug,在月底不能做到跳转到下一月.后期修复.
